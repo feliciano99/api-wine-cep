@@ -39,9 +39,14 @@ public class CepController {
 	}
 
 	@GetMapping(value = "/filter/{faixaInicio}")
-	public Optional<Cep> findStore(@PathVariable String faixaInicio) {
+	public String findStore(@PathVariable String faixaInicio) {
 		System.out.println("VALOR: " + faixaInicio);
-		return this.cepRepository.findByFaixaInicio(faixaInicio);
+		Optional<Cep> cepData = this.cepRepository.findByFaixaInicio(faixaInicio);
+		if(cepData.isPresent()){
+			return "A loja existente para o seu CEP é: " + cepData.get().getCodigoLoja();
+		}else {
+			return "Por enquanto não existe uma loja para o CEP informado";
+		}
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
