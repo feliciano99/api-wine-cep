@@ -1,6 +1,7 @@
 package br.com.wine.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -23,26 +24,37 @@ import br.com.wine.repository.CepRepository;
 @RequestMapping("/cep")
 @RestController
 public class CepController {
-
+		
 	@Autowired
-	private CepRepository cepRepository;
+	CepRepository cepRepository;
 
-	@GetMapping
-	public List<Cep> listar() {
-		return cepRepository.findAll();
+	@GetMapping("/")
+	public List<Cep> findAll() {
+		return this.cepRepository.findAll();
+	}
+	
+	@GetMapping("/{id}")
+	public Optional<Cep> findById(@PathVariable Long id) {
+		return this.cepRepository.findById(id);
+	}
+
+	@GetMapping(value = "/filter/{faixaInicio}")
+	public Optional<Cep> findStore(@PathVariable String faixaInicio) {
+		System.out.println("VALOR: " + faixaInicio);
+		return this.cepRepository.findByFaixaInicio(faixaInicio);
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cep insert(@RequestBody @Valid Cep cep) {
-		return cepRepository.save(cep);
+		return this.cepRepository.save(cep);
 	}
 
 	@PutMapping(value = "/{id}")
 	public ResponseEntity update(@PathVariable("id") long id, @RequestBody Cep cep) {
-		return cepRepository.findById(id).map(cep_updated -> {
-			cep.setFaixa_inicio(cep.getFaixa_inicio());
-			cep.setFaixa_fim(cep.getFaixa_fim());
+		return this.cepRepository.findById(id).map(cep_updated -> {
+			cep.setFaixaInicio(cep.getFaixaInicio());
+			cep.setFaixaFim(cep.getFaixaFim());
 			Cep updated = cepRepository.save(cep_updated);
 			return ResponseEntity.ok().body(updated);
 		}).orElse(ResponseEntity.notFound().build());

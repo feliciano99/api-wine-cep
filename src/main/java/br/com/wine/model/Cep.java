@@ -22,13 +22,13 @@ public class Cep {
 
 	@Column(nullable = false, name = "CODIGO_LOJA")
 	@NotEmpty(message = "O campo 'Código da Loja' é obrigatório!")
-	private String codigo_loja;
+	private String codigoLoja;
 
 	@Column(nullable = false, name = "FAIXA_INICIO")
 	@NotEmpty(message = "O campo 'Faixa Início' é obrigatório!")
-	private String faixa_inicio;
+	private String faixaInicio;
 
 	@Column(nullable = false, name = "FAIXA_FIM")
 	@NotEmpty(message = "O campo 'Código Fim' é obrigatório!")
-	private String faixa_fim;
+	private String faixaFim;
 }
