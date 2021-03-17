@@ -51,13 +51,17 @@ public class CepController {
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity update(@PathVariable("id") long id, @RequestBody Cep cep) {
-		return this.cepRepository.findById(id).map(cep_updated -> {
-			cep.setFaixaInicio(cep.getFaixaInicio());
-			cep.setFaixaFim(cep.getFaixaFim());
-			Cep updated = cepRepository.save(cep_updated);
-			return ResponseEntity.ok().body(updated);
-		}).orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<Cep> update(@PathVariable("id") long id, @RequestBody Cep cep) {
+		Optional<Cep> cepData = cepRepository.findById(id);
+		
+		if(cepData.isPresent()) {
+			Cep _cep = cepData.get();
+			_cep.setFaixaInicio(cep.getFaixaInicio());
+			_cep.setFaixaFim(cep.getFaixaFim());
+			return new ResponseEntity<>(cepRepository.save(_cep), HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@DeleteMapping(path = { "/{id}" })
